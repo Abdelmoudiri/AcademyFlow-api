@@ -3,26 +3,30 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Evaluation;
+use App\Models\user;
+
 
 class course extends Model
 {
-    // Define the table associated with the model
-    protected $table = 'courses';
+    
+    protected $table = 'course';
 
-    // Define the primary key for the table
+ 
     protected $primaryKey = 'id';
 
-    // Specify which attributes should be mass-assignable
-    protected $fillable = ['name', 'description', 'credits'];
 
-    // Define any relationships with other models
-    public function students()
+    protected $fillable = ['title', 'description','student_id'];
+
+    public function evaluations()
     {
-        return $this->belongsToMany(Student::class);
+        return $this->hasMany(Evaluation::class , 'course_id');
     }
 
-    public function instructor()
+    public function students()
     {
-        return $this->belongsTo(Instructor::class);
+        return $this->belongsToMany(students::class, 'role_user', 'user_id', 'role_id')
+                    ->withPivot('grade', 'note','date');
+                    
     }
 }
